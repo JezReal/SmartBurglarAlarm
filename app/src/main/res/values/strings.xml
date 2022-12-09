@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SmartBurglarAlarm</string>
+    <string name="alarm_10_is_10_sleeping">Alarm\nis\nsleeping...</string>
 </resources>
