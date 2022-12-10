@@ -75,6 +75,13 @@ dependencies {
 
     //Fragment ktx
     implementation "androidx.fragment:fragment-ktx:$fragment_version"
+
+    //Navigation component
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+
+    //Timber
+    implementation "com.jakewharton.timber:timber:$timber_version"
 }
 
 kapt {
