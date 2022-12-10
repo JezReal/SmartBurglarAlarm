@@ -6,10 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jezreal.smartburglaralarm.databinding.FragmentMainBinding
+import io.github.jezreal.smartburglaralarm.ui.main.MainViewModel.MainEvent.ShowSnackBar
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -27,6 +33,8 @@ class MainFragment : Fragment() {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
 
         setListeners()
+        collectFlows()
+        observeLiveData()
 
         return binding.root
     }
@@ -49,7 +57,7 @@ class MainFragment : Fragment() {
             }
 
             button.setOnClickListener {
-                viewModel.logSomething()
+                viewModel.showSnackBar("hello roiii", Snackbar.LENGTH_SHORT)
             }
         }
     }
@@ -61,5 +69,29 @@ class MainFragment : Fragment() {
             .setMinute(10)
             .setTitleText(title)
             .build()
+    }
+
+    private fun observeLiveData() {
+//        observe data here
+    }
+
+    private fun collectFlows() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    collectEvents()
+                }
+            }
+        }
+    }
+
+    private suspend fun collectEvents()  {
+        viewModel.mainEvent.collect { event ->
+            when(event) {
+                is ShowSnackBar -> {
+                    Snackbar.make(binding.root, event.message, event.length).show()
+                }
+            }
+        }
     }
 }
