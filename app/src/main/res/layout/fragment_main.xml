@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="io.github.jezreal.smartburglaralarm.ui.main.MainFragment"
-
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+
+    android:layout_height="match_parent"
+    tools:context="io.github.jezreal.smartburglaralarm.ui.main.MainFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
@@ -52,7 +52,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="0"
                 android:orientation="horizontal"
                 android:weightSum="2">
@@ -65,10 +65,10 @@
                     android:hint="From">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/from_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:onClick="selectFromTime" />
+                        android:focusable="false" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -85,10 +85,10 @@
                     android:hint="To">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/to_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:onClick="selectToTime" />
+                        android:focusable="false" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
