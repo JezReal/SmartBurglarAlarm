@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent"
     tools:context="io.github.jezreal.smartburglaralarm.ui.main.MainFragment">
 
@@ -112,6 +111,30 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.6" />
+
+        <Button
+            android:id="@+id/get_quote_button"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get a random quote"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/button"
+            app:layout_constraintRight_toRightOf="@id/button"
+            app:layout_constraintTop_toBottomOf="@id/button" />
+
+        <TextView
+            android:id="@+id/quote_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/get_quote_button"
+            app:layout_constraintLeft_toLeftOf="@id/get_quote_button"
+            app:layout_constraintRight_toRightOf="@id/get_quote_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

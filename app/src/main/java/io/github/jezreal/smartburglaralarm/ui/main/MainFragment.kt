@@ -15,6 +15,7 @@ import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jezreal.smartburglaralarm.databinding.FragmentMainBinding
 import io.github.jezreal.smartburglaralarm.ui.main.MainViewModel.MainEvent.ShowSnackBar
+import io.github.jezreal.smartburglaralarm.ui.main.MainViewModel.MainState.*
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -59,6 +60,10 @@ class MainFragment : Fragment() {
             button.setOnClickListener {
                 viewModel.showSnackBar("hello roiii", Snackbar.LENGTH_SHORT)
             }
+
+            getQuoteButton.setOnClickListener {
+                viewModel.getRandomQuote()
+            }
         }
     }
 
@@ -72,7 +77,26 @@ class MainFragment : Fragment() {
     }
 
     private fun observeLiveData() {
-//        observe data here
+        viewModel.mainState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is Empty -> {
+                    viewModel.showSnackBar("Empty state bruh", Snackbar.LENGTH_SHORT)
+                }
+
+                is Loading -> {
+                    viewModel.showSnackBar("Loading", Snackbar.LENGTH_SHORT)
+                }
+
+                is Success -> {
+//                    viewModel.showSnackBar(state.response, Snackbar.LENGTH_LONG)
+                    binding.quoteText.text = state.response
+                }
+
+                is Error -> {
+                    viewModel.showSnackBar(state.message, Snackbar.LENGTH_SHORT)
+                }
+            }
+        }
     }
 
     private fun collectFlows() {
@@ -85,9 +109,9 @@ class MainFragment : Fragment() {
         }
     }
 
-    private suspend fun collectEvents()  {
+    private suspend fun collectEvents() {
         viewModel.mainEvent.collect { event ->
-            when(event) {
+            when (event) {
                 is ShowSnackBar -> {
                     Snackbar.make(binding.root, event.message, event.length).show()
                 }
