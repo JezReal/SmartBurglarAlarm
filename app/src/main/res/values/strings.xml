@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">SmartBurglarAlarm</string>
-    <string name="alarm_10_is_10_sleeping">Alarm\nis\nsleeping...</string>
+    <string name="alarm_10_is_10_sleeping">Alarm\nis\nsleeping…</string>
+    <string name="alarm_10_is_10_running">Alarm\nis\nrunning…</string>
+    <string name="automatic">Automatic</string>
+    <string name="manual">Manual</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
 </resources>

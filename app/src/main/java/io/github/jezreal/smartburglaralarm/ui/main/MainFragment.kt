@@ -47,17 +47,17 @@ class MainFragment : Fragment() {
 
     private fun setListeners() {
         binding.apply {
-            fromTime.setOnClickListener {
-                buildPicker("Select from time")
-                picker.show(requireActivity().supportFragmentManager, "MainFragment")
-            }
+//            fromTime.setOnClickListener {
+//                buildPicker("Select from time")
+//                picker.show(requireActivity().supportFragmentManager, "MainFragment")
+//            }
+//
+//            toTime.setOnClickListener {
+//                buildPicker("Select to time")
+//                picker.show(requireActivity().supportFragmentManager, "MainFragment")
+//            }
 
-            toTime.setOnClickListener {
-                buildPicker("Select to time")
-                picker.show(requireActivity().supportFragmentManager, "MainFragment")
-            }
-
-            button.setOnClickListener {
+            activateButton.setOnClickListener {
                 viewModel.showSnackBar("hello roiii", Snackbar.LENGTH_SHORT)
             }
 
