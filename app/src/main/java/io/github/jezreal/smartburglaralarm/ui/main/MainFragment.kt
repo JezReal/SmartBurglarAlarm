@@ -61,9 +61,9 @@ class MainFragment : Fragment() {
                 viewModel.showSnackBar("hello roiii", Snackbar.LENGTH_SHORT)
             }
 
-            getQuoteButton.setOnClickListener {
-                viewModel.getRandomQuote()
-            }
+           toggleButton.setOnClickListener {
+               viewModel.toggleLed()
+           }
         }
     }
 
@@ -88,8 +88,7 @@ class MainFragment : Fragment() {
                 }
 
                 is Success -> {
-//                    viewModel.showSnackBar(state.response, Snackbar.LENGTH_LONG)
-                    binding.quoteText.text = state.response
+                    binding.ledStatus.text = "Led status: ${state.response}"
                 }
 
                 is Error -> {

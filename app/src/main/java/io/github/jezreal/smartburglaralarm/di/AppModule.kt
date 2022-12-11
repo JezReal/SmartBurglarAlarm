@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.github.jezreal.smartburglaralarm.network.QuoteApi
+import io.github.jezreal.smartburglaralarm.network.LedApi
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
@@ -15,11 +15,11 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideTestApi(): QuoteApi {
+    fun provideTestApi(): LedApi {
         return Retrofit.Builder()
-            .baseUrl(QuoteApi.BASE_URL)
+            .baseUrl(LedApi.BASE_URL)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
-            .create(QuoteApi::class.java)
+            .create(LedApi::class.java)
     }
 }

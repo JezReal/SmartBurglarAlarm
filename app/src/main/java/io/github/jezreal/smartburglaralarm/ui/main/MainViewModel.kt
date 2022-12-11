@@ -30,13 +30,13 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getRandomQuote() {
+    fun toggleLed() {
         viewModelScope.launch(Dispatchers.Default) {
             _mainState.emit(MainState.Loading)
 
-            when (val apiResponse = repository.getApiResponse()) {
+            when (val apiResponse = repository.toggleLed()) {
                 is Resource.Success -> {
-                    _mainState.emit(MainState.Success(apiResponse.data!!.content))
+                    _mainState.emit(MainState.Success(apiResponse.data!!.status))
                 }
 
                 is Resource.Error -> {
