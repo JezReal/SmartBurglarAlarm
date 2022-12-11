@@ -127,14 +127,13 @@
             android:id="@+id/quote_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:maxLines="2"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/get_quote_button"
+            android:maxLines="2"
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="@id/get_quote_button"
             app:layout_constraintRight_toRightOf="@id/get_quote_button"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintTop_toBottomOf="@id/get_quote_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
