@@ -82,6 +82,8 @@ dependencies {
 
     //Timber
     implementation "com.jakewharton.timber:timber:$timber_version"
+
+    implementation "dev.gustavoavila:java-android-websocket-client:$websocket_version"
 }
 
 kapt {
