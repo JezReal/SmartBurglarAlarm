@@ -12,6 +12,6 @@ interface LedApi {
     suspend fun toggleLed(): Response<LedStatus>
 
     companion object {
-        const val BASE_URL = "http://192.168.1.18:8080"
+        const val BASE_URL = "http://192.168.4.1:8080"
     }
 }

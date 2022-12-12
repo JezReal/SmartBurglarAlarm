@@ -64,6 +64,14 @@ class MainFragment : Fragment() {
            toggleButton.setOnClickListener {
                viewModel.toggleLed()
            }
+
+            websocketButton.setOnClickListener {
+                if (websocketButton.text == "Connect") {
+                    viewModel.connectWebSocket()
+                } else {
+                    viewModel.closeSocket()
+                }
+            }
         }
     }
 
@@ -80,11 +88,11 @@ class MainFragment : Fragment() {
         viewModel.mainState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is Empty -> {
-                    viewModel.showSnackBar("Empty state bruh", Snackbar.LENGTH_SHORT)
+//                do nothing
                 }
 
                 is Loading -> {
-                    viewModel.showSnackBar("Loading", Snackbar.LENGTH_SHORT)
+//                    do nothing
                 }
 
                 is Success -> {
@@ -93,6 +101,18 @@ class MainFragment : Fragment() {
 
                 is Error -> {
                     viewModel.showSnackBar(state.message, Snackbar.LENGTH_SHORT)
+                }
+
+                is SocketConnected -> {
+                    binding.websocketButton.text = "Disconnect"
+                }
+
+                is SocketDisconnected -> {
+                    binding.websocketButton.text = "Connect"
+                }
+
+                is SocketLoading -> {
+                    viewModel.showSnackBar("Connecting", Snackbar.LENGTH_SHORT)
                 }
             }
         }
@@ -116,5 +136,10 @@ class MainFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.closeSocket()
     }
 }
