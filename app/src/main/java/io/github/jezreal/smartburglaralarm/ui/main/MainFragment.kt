@@ -1,5 +1,6 @@
 package io.github.jezreal.smartburglaralarm.ui.main
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.jezreal.smartburglaralarm.R
 import io.github.jezreal.smartburglaralarm.databinding.FragmentMainBinding
 import io.github.jezreal.smartburglaralarm.ui.main.MainViewModel.MainEvent.ShowSnackBar
 import io.github.jezreal.smartburglaralarm.ui.main.MainViewModel.MainState.*
@@ -57,13 +59,21 @@ class MainFragment : Fragment() {
 //                picker.show(requireActivity().supportFragmentManager, "MainFragment")
 //            }
 
-            activateButton.setOnClickListener {
-                viewModel.showSnackBar("hello roiii", Snackbar.LENGTH_SHORT)
+            activateToggleButton.setOnCheckedChangeListener { _, isChecked ->
+                if (isChecked) {
+                    viewModel.showSnackBar("hello roiii", Snackbar.LENGTH_SHORT)
+                    activateToggleButton.setTypeface(Typeface.create("sans-serif-medium", Typeface.ITALIC))
+                    activateToggleButton.setBackgroundResource(R.drawable.activate_button_background_running)
+                } else {
+                    viewModel.showSnackBar("hi jezzz", Snackbar.LENGTH_SHORT)
+                    activateToggleButton.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL))
+                    activateToggleButton.setBackgroundResource(R.drawable.activate_button_background_sleeping)
+                }
             }
 
-           toggleButton.setOnClickListener {
+            toggleButton.setOnClickListener {
                viewModel.toggleLed()
-           }
+            }
 
             websocketButton.setOnClickListener {
                 if (websocketButton.text == "Connect") {

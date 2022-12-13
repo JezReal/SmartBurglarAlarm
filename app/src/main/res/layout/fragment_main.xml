@@ -95,16 +95,17 @@
 
         <!--        </LinearLayout>-->
 
-        <android.widget.Button
-            android:id="@+id/activateButton"
+        <ToggleButton
+            android:id="@+id/activateToggleButton"
             android:layout_width="250dp"
             android:layout_height="250dp"
-            android:background="@drawable/activate_button_background"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
+            android:background="@drawable/activate_button_background_sleeping"
+            android:fontFamily="sans-serif"
             android:stateListAnimator="@null"
             android:text="@string/alarm_10_is_10_sleeping"
             android:textAllCaps="false"
+            android:textOff="@string/alarm_10_is_10_sleeping"
+            android:textOn="@string/alarm_10_is_10_running"
             android:textSize="24sp"
             app:cornerRadius="999dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -122,7 +123,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/websocket_button"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/activateButton" />
+            app:layout_constraintTop_toBottomOf="@id/activateToggleButton" />
 
         <Button
             android:id="@+id/websocket_button"
