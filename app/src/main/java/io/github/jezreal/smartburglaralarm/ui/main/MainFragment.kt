@@ -11,8 +11,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jezreal.smartburglaralarm.R
 import io.github.jezreal.smartburglaralarm.databinding.FragmentMainBinding
@@ -26,7 +24,6 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var picker: MaterialTimePicker
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
@@ -49,80 +46,46 @@ class MainFragment : Fragment() {
 
     private fun setListeners() {
         binding.apply {
-//            fromTime.setOnClickListener {
-//                buildPicker("Select from time")
-//                picker.show(requireActivity().supportFragmentManager, "MainFragment")
-//            }
-//
-//            toTime.setOnClickListener {
-//                buildPicker("Select to time")
-//                picker.show(requireActivity().supportFragmentManager, "MainFragment")
-//            }
-
-            activateToggleButton.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    viewModel.showSnackBar("hello roiii", Snackbar.LENGTH_SHORT)
-                    activateToggleButton.setTypeface(Typeface.create("sans-serif-medium", Typeface.ITALIC))
-                    activateToggleButton.setBackgroundResource(R.drawable.activate_button_background_running)
-                } else {
-                    viewModel.showSnackBar("hi jezzz", Snackbar.LENGTH_SHORT)
-                    activateToggleButton.setTypeface(Typeface.create("sans-serif", Typeface.NORMAL))
-                    activateToggleButton.setBackgroundResource(R.drawable.activate_button_background_sleeping)
-                }
+            activateToggleButton.isEnabled = false
+            activateToggleButton.text = resources.getString(R.string.alarm_loading)
+            activateToggleButton.setOnClickListener {
+                activateToggleButton.text = resources.getString(R.string.alarm_status)
+                viewModel.showSnackBar("Toggling alarm...", Snackbar.LENGTH_SHORT)
             }
 
-            toggleButton.setOnClickListener {
-               viewModel.toggleLed()
+            activateToggleButton.setOnClickListener {
+                viewModel.toggleDeviceStatus()
             }
 
-            websocketButton.setOnClickListener {
-                if (websocketButton.text == "Connect") {
-                    viewModel.connectWebSocket()
-                } else {
-                    viewModel.closeSocket()
-                }
+            connectToNodeButton.setOnClickListener {
+                viewModel.getDeviceStatus()
             }
+
         }
-    }
-
-    private fun buildPicker(title: String) {
-        picker = MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_12H)
-            .setHour(12)
-            .setMinute(10)
-            .setTitleText(title)
-            .build()
     }
 
     private fun observeLiveData() {
         viewModel.mainState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is Empty -> {
-//                do nothing
+                    viewModel.getDeviceStatus()
                 }
 
                 is Loading -> {
-//                    do nothing
+                    viewModel.showSnackBar("Loading", Snackbar.LENGTH_SHORT)
                 }
 
                 is Success -> {
-                    binding.ledStatus.text = "Led status: ${state.response}"
+                    if (state.response == "Alarm on") {
+                        setAlarmRunning()
+                    } else {
+                        setAlarmSleeping()
+                    }
                 }
 
                 is Error -> {
+                    binding.activateToggleButton.text = resources.getString(R.string.alarm_error)
                     viewModel.showSnackBar(state.message, Snackbar.LENGTH_SHORT)
-                }
-
-                is SocketConnected -> {
-                    binding.websocketButton.text = "Disconnect"
-                }
-
-                is SocketDisconnected -> {
-                    binding.websocketButton.text = "Connect"
-                }
-
-                is SocketLoading -> {
-                    viewModel.showSnackBar("Connecting", Snackbar.LENGTH_SHORT)
                 }
             }
         }
@@ -148,8 +111,21 @@ class MainFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.closeSocket()
+    private fun setAlarmRunning() {
+        binding.apply {
+            activateToggleButton.isEnabled = true
+            activateToggleButton.text = resources.getString(R.string.alarm_10_is_10_running)
+            activateToggleButton.typeface = Typeface.create("sans-serif-medium", Typeface.ITALIC)
+            activateToggleButton.setBackgroundResource(R.drawable.activate_button_background_running)
+        }
+    }
+
+    private fun setAlarmSleeping() {
+        binding.apply {
+            activateToggleButton.isEnabled = true
+            activateToggleButton.text = resources.getString(R.string.alarm_10_is_10_sleeping)
+            activateToggleButton.typeface = Typeface.create("sans-serif", Typeface.NORMAL)
+            activateToggleButton.setBackgroundResource(R.drawable.activate_button_background_sleeping)
+        }
     }
 }

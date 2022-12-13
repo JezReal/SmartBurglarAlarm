@@ -2,6 +2,9 @@
     <string name="app_name">SmartBurglarAlarm</string>
     <string name="alarm_10_is_10_sleeping">Alarm\nis\nsleeping…</string>
     <string name="alarm_10_is_10_running">Alarm\nis\nrunning…</string>
+    <string name="alarm_status">Alarm status</string>
+    <string name="alarm_loading">Loading…</string>
+    <string name="alarm_error">Cannot connect</string>
     <string name="automatic">Automatic</string>
     <string name="manual">Manual</string>
     <string name="from">From</string>
@@ -10,4 +13,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="sensor">Sensor</string>
     <string name="live_feed">Live Feed</string>
+    <string name="connect_to_device">Connect to Device</string>
 </resources>

@@ -101,11 +101,7 @@
             android:layout_height="250dp"
             android:background="@drawable/activate_button_background_sleeping"
             android:fontFamily="sans-serif"
-            android:stateListAnimator="@null"
-            android:text="@string/alarm_10_is_10_sleeping"
             android:textAllCaps="false"
-            android:textOff="@string/alarm_10_is_10_sleeping"
-            android:textOn="@string/alarm_10_is_10_running"
             android:textSize="24sp"
             app:cornerRadius="999dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -115,38 +111,16 @@
             app:layout_constraintVertical_bias="0.4" />
 
         <Button
-            android:id="@+id/toggle_button"
+            android:id="@+id/connect_to_node_button"
             style="@style/Widget.Material3.Button.ElevatedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Toggle LED"
+            android:text="@string/connect_to_device"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/websocket_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/activateToggleButton" />
 
-        <Button
-            android:id="@+id/websocket_button"
-            style="@style/Widget.Material3.Button.ElevatedButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Connect"
-            app:layout_constraintBottom_toBottomOf="@id/toggle_button"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/toggle_button"
-            app:layout_constraintTop_toTopOf="@id/toggle_button" />
-
-        <TextView
-            android:id="@+id/led_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/toggle_button"
-            app:layout_constraintRight_toRightOf="@id/toggle_button"
-            app:layout_constraintTop_toBottomOf="@id/toggle_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

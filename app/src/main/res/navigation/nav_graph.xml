@@ -14,5 +14,5 @@
         android:id="@+id/second_fragment"
         android:name="io.github.jezreal.smartburglaralarm.SecondFragment"
         android:label="SecondFragment"
-        tools:layout="@layout/fragment_second" />
+        tools:layout="@layout/fragment_sensor_stream" />
 </navigation>
