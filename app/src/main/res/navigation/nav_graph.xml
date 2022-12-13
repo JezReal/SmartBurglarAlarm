@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_main" />
     <fragment
         android:id="@+id/second_fragment"
-        android:name="io.github.jezreal.smartburglaralarm.SecondFragment"
+        android:name="io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamFragment"
         android:label="SecondFragment"
         tools:layout="@layout/fragment_sensor_stream" />
 </navigation>

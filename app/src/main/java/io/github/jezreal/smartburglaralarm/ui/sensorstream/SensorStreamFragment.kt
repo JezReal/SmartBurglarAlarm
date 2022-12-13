@@ -10,11 +10,13 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.jezreal.smartburglaralarm.databinding.FragmentSensorStreamBinding
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamEvent.ShowSnackBar
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamState.*
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SensorStreamFragment : Fragment() {
 
     private var _binding: FragmentSensorStreamBinding? = null
@@ -36,8 +38,14 @@ class SensorStreamFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getDeviceStatus()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        viewModel.closeSocket()
         _binding = null
     }
 
@@ -65,7 +73,7 @@ class SensorStreamFragment : Fragment() {
         viewModel.sensorStreamState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is Empty -> {
-                    viewModel.connectWebSocket()
+//                    do nothing
                 }
 
                 is Loading -> {
@@ -78,6 +86,14 @@ class SensorStreamFragment : Fragment() {
 
                 is SocketDisconnected -> {
 //                  do nothing
+                }
+
+                is Error -> {
+                    viewModel.showSnackBar(state.message, Snackbar.LENGTH_SHORT)
+                }
+
+                is DeviceInactive -> {
+                    viewModel.showSnackBar("Device is inactive. No data available", Snackbar.LENGTH_LONG)
                 }
             }
         }

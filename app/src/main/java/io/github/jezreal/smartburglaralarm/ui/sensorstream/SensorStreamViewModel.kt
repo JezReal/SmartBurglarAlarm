@@ -6,9 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.gustavoavila.websocketclient.WebSocketClient
+import io.github.jezreal.smartburglaralarm.repository.NodeRepository
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamEvent.ShowSnackBar
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamState.SocketConnected
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamState.SocketDisconnected
+import io.github.jezreal.smartburglaralarm.wrappers.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -19,7 +21,9 @@ import java.net.URISyntaxException
 import javax.inject.Inject
 
 @HiltViewModel
-class SensorStreamViewModel @Inject constructor() : ViewModel() {
+class SensorStreamViewModel @Inject constructor(
+    private val repository: NodeRepository
+) : ViewModel() {
 
     private val _sensorStreamState = MutableStateFlow<SensorStreamState>(SensorStreamState.Empty)
     val sensorStreamState = _sensorStreamState.asLiveData()
@@ -30,7 +34,7 @@ class SensorStreamViewModel @Inject constructor() : ViewModel() {
     private lateinit var socketUri: URI
     private lateinit var socketClient: WebSocketClient
 
-    fun connectWebSocket() {
+    private fun connectWebSocket() {
         Timber.d("Connecting to socket")
         viewModelScope.launch {
             _sensorStreamEvent.emit(
@@ -74,7 +78,7 @@ class SensorStreamViewModel @Inject constructor() : ViewModel() {
                     viewModelScope.launch {
                         _sensorStreamEvent.emit(
                             ShowSnackBar(
-                                message,
+                                message.trim(),
                                 Snackbar.LENGTH_SHORT
                             )
                         )
@@ -120,12 +124,30 @@ class SensorStreamViewModel @Inject constructor() : ViewModel() {
             socketClient.setReadTimeout(60_000)
             socketClient.enableAutomaticReconnection(5_000)
 
-            Timber.d("Connected?")
             socketClient.connect()
 
             _sensorStreamState.emit(SocketConnected)
         }
+    }
 
+    fun getDeviceStatus() {
+        _sensorStreamState.value = SensorStreamState.Loading
+        viewModelScope.launch {
+
+            when(val response = repository.connectToDevice()) {
+                is Resource.Success -> {
+                    if(response.data!!.alarmStatus == "Alarm on") {
+                        connectWebSocket()
+                    } else {
+                        _sensorStreamState.value = SensorStreamState.DeviceInactive
+                    }
+                }
+
+                is Resource.Error -> {
+                    _sensorStreamState.value = SensorStreamState.Error(response.message!!)
+                }
+            }
+        }
     }
 
     fun showSnackBar(message: String, length: Int) {
@@ -135,7 +157,10 @@ class SensorStreamViewModel @Inject constructor() : ViewModel() {
     }
 
     fun closeSocket() {
-        socketClient.close()
+        if (this::socketClient.isInitialized) {
+            socketClient.close()
+        }
+
         viewModelScope.launch {
             _sensorStreamState.emit(SocketDisconnected)
         }
@@ -146,6 +171,8 @@ class SensorStreamViewModel @Inject constructor() : ViewModel() {
         object Loading : SensorStreamState()
         object SocketConnected : SensorStreamState()
         object SocketDisconnected : SensorStreamState()
+        object DeviceInactive : SensorStreamState()
+        class Error(val message: String) : SensorStreamState()
     }
 
     sealed class SensorStreamEvent {
