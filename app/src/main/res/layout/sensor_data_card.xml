@@ -3,39 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="32dp"
+    android:layout_height="48dp"
     android:layout_marginHorizontal="8dp"
     android:layout_marginVertical="4dp"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/black"
+    app:strokeWidth="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
-            android:layout_marginTop="4dp"
             android:id="@+id/timestamp_text"
+            style="@style/TextAppearance.Material3.BodySmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/sensor_value"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="Timestamp"
-            style="@style/TextAppearance.Material3.BodySmall"
-            />
+            tools:text="Timestamp" />
 
         <TextView
             android:id="@+id/sensor_value"
             style="@style/TextAppearance.Material3.TitleMedium"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/timestamp_text"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Sensor data baby" />
 
