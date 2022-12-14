@@ -5,8 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
+import android.os.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -74,6 +73,7 @@ class MainActivity : AppCompatActivity() {
                             }
                             is SensorStreamViewModel.SensorStreamEvent.BurglarDetected -> {
                                 showNotification(event.id)
+                                triggerVibration()
                             }
                         }
                     }
@@ -118,6 +118,34 @@ class MainActivity : AppCompatActivity() {
             val notificationManager: NotificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    private fun triggerVibration() {
+        if (Build.VERSION.SDK_INT >= 31) {
+            val vibrator = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+
+            vibrator.vibrate(
+                CombinedVibration.createParallel(
+                    VibrationEffect.createOneShot(
+                        1000,
+                        VibrationEffect.EFFECT_DOUBLE_CLICK
+                    )
+                )
+            )
+        } else if (Build.VERSION.SDK_INT >= 29) {
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+            vibrator.vibrate(
+                VibrationEffect.createOneShot(
+                    1000,
+                    VibrationEffect.EFFECT_DOUBLE_CLICK
+                )
+            )
+        } else {
+            val vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+            vibrator.vibrate(1000)
         }
     }
 
