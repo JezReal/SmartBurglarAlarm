@@ -14,4 +14,5 @@
     <string name="sensor">Sensor</string>
     <string name="live_feed">Live Feed</string>
     <string name="connect_to_device">Connect to Device</string>
+    <string name="device_inactive">Device is inactive. No data available</string>
 </resources>

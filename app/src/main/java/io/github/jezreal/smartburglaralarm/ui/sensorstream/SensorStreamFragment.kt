@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import io.github.jezreal.smartburglaralarm.R
 import io.github.jezreal.smartburglaralarm.databinding.FragmentSensorStreamBinding
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamEvent.ShowSnackBar
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamState.*
@@ -23,6 +24,7 @@ class SensorStreamFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SensorStreamViewModel by viewModels()
+    private lateinit var adapter: SensorDataAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,6 +33,7 @@ class SensorStreamFragment : Fragment() {
     ): View {
         _binding = FragmentSensorStreamBinding.inflate(inflater, container, false)
 
+        setRecyclerViewAdapter()
         setListeners()
         observeEvents()
         observeLiveData()
@@ -73,7 +76,8 @@ class SensorStreamFragment : Fragment() {
         viewModel.sensorStreamState.observe(viewLifecycleOwner) { state ->
             when (state) {
                 is Empty -> {
-//                    do nothing
+                    binding.recyclerView.visibility = View.GONE
+                    binding.errorMessage.visibility = View.GONE
                 }
 
                 is Loading -> {
@@ -81,7 +85,8 @@ class SensorStreamFragment : Fragment() {
                 }
 
                 is SocketConnected -> {
-//                    do nothing
+                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.errorMessage.visibility = View.GONE
                 }
 
                 is SocketDisconnected -> {
@@ -93,10 +98,22 @@ class SensorStreamFragment : Fragment() {
                 }
 
                 is DeviceInactive -> {
-                    viewModel.showSnackBar("Device is inactive. No data available", Snackbar.LENGTH_LONG)
+                    binding.errorMessage.text = resources.getString(R.string.device_inactive)
+                    binding.errorMessage.visibility = View.VISIBLE
+                    binding.recyclerView.visibility = View.GONE
                 }
             }
         }
+
+        viewModel.sensorDataStream.observe(viewLifecycleOwner) { sensorData ->
+            adapter.submitList(sensorData)
+            binding.recyclerView.smoothScrollToPosition(adapter.itemCount)
+        }
+    }
+
+    private fun setRecyclerViewAdapter() {
+        adapter = SensorDataAdapter()
+        binding.recyclerView.adapter = adapter
     }
 
 

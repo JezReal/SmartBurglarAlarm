@@ -1,11 +1,13 @@
 package io.github.jezreal.smartburglaralarm.ui.sensorstream
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.gustavoavila.websocketclient.WebSocketClient
+import io.github.jezreal.smartburglaralarm.domain.SensorData
 import io.github.jezreal.smartburglaralarm.repository.NodeRepository
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamEvent.ShowSnackBar
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamState.SocketConnected
@@ -15,6 +17,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
 import timber.log.Timber
 import java.net.URI
 import java.net.URISyntaxException
@@ -30,6 +34,11 @@ class SensorStreamViewModel @Inject constructor(
 
     private val _sensorStreamEvent = MutableSharedFlow<SensorStreamEvent>()
     val sensorStreamEvent = _sensorStreamEvent.asSharedFlow()
+
+    private val _sensorDataStream = MutableStateFlow(emptyList<SensorData>())
+    val sensorDataStream: LiveData<List<SensorData>> = _sensorDataStream.asLiveData()
+
+    private var sensorDataId = 1L
 
     private lateinit var socketUri: URI
     private lateinit var socketClient: WebSocketClient
@@ -63,7 +72,6 @@ class SensorStreamViewModel @Inject constructor(
 
             socketClient = object : WebSocketClient(socketUri) {
                 override fun onOpen() {
-                    Timber.d("Socket opened")
                     viewModelScope.launch {
                         _sensorStreamEvent.emit(
                             ShowSnackBar(
@@ -75,14 +83,17 @@ class SensorStreamViewModel @Inject constructor(
                 }
 
                 override fun onTextReceived(message: String) {
-                    viewModelScope.launch {
-                        _sensorStreamEvent.emit(
-                            ShowSnackBar(
-                                message.trim(),
-                                Snackbar.LENGTH_SHORT
-                            )
-                        )
-                    }
+                    val sensorData = addSensorData(message)
+                    _sensorDataStream.value = _sensorDataStream.value.toMutableList() + sensorData
+                    
+//                    viewModelScope.launch {
+//                        _sensorStreamEvent.emit(
+//                            ShowSnackBar(
+//                                message.trim(),
+//                                Snackbar.LENGTH_SHORT
+//                            )
+//                        )
+//                    }
                 }
 
                 override fun onBinaryReceived(data: ByteArray?) {
@@ -134,9 +145,9 @@ class SensorStreamViewModel @Inject constructor(
         _sensorStreamState.value = SensorStreamState.Loading
         viewModelScope.launch {
 
-            when(val response = repository.connectToDevice()) {
+            when (val response = repository.connectToDevice()) {
                 is Resource.Success -> {
-                    if(response.data!!.alarmStatus == "Alarm on") {
+                    if (response.data!!.alarmStatus == "Alarm on") {
                         connectWebSocket()
                     } else {
                         _sensorStreamState.value = SensorStreamState.DeviceInactive
@@ -164,6 +175,23 @@ class SensorStreamViewModel @Inject constructor(
         viewModelScope.launch {
             _sensorStreamState.emit(SocketDisconnected)
         }
+    }
+
+    private fun addSensorData(message: String): SensorData {
+        val timeStamp = DateTime.now().toLocalTime()
+        val formattedTimeStamp = DateTimeFormat.forPattern("hh:mm:ss aa")
+
+        val parsedMessage = if (message.trim() == "0") {
+            "No motion"
+        } else {
+            "Motion detected"
+        }
+
+        return SensorData(
+            sensorDataId++,
+            parsedMessage,
+            formattedTimeStamp.print(timeStamp)
+        )
     }
 
     sealed class SensorStreamState {
