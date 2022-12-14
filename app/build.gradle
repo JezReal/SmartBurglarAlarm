@@ -84,6 +84,10 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$timber_version"
 
     implementation "dev.gustavoavila:java-android-websocket-client:$websocket_version"
+
+    // https://mvnrepository.com/artifact/joda-time/joda-time
+    implementation "joda-time:joda-time:$joda_version"
+
 }
 
 kapt {
