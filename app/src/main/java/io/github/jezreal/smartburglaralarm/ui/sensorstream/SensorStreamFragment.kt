@@ -106,6 +106,7 @@ class SensorStreamFragment : Fragment() {
         }
 
         viewModel.sensorDataStream.observe(viewLifecycleOwner) { sensorData ->
+            binding.recyclerView.visibility = View.VISIBLE
             adapter.submitList(sensorData)
             binding.recyclerView.smoothScrollToPosition(adapter.itemCount)
         }

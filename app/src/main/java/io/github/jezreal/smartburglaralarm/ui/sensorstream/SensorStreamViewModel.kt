@@ -35,7 +35,33 @@ class SensorStreamViewModel @Inject constructor(
     private val _sensorStreamEvent = MutableSharedFlow<SensorStreamEvent>()
     val sensorStreamEvent = _sensorStreamEvent.asSharedFlow()
 
-    private val _sensorDataStream = MutableStateFlow(emptyList<SensorData>())
+    private val _sensorDataStream = MutableStateFlow(listOf<SensorData>(
+        SensorData(
+            1,
+            "No motion",
+            "12:00:00 AM"
+        ),
+        SensorData(
+            2,
+            "No motion",
+            "12:00:01 AM"
+        ),
+        SensorData(
+            3,
+            "No motion",
+            "12:00:02 AM"
+        ),
+        SensorData(
+            4,
+            "Motion detected",
+            "12:00:03 AM"
+        ),
+        SensorData(
+            5,
+            "Motion detected",
+            "12:00:04 AM"
+        )
+    ))
     val sensorDataStream: LiveData<List<SensorData>> = _sensorDataStream.asLiveData()
 
     private var sensorDataId = 1L
