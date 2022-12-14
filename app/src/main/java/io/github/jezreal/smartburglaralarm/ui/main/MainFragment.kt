@@ -39,6 +39,11 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getDeviceStatus()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -72,6 +77,12 @@ class MainFragment : Fragment() {
                 }
 
                 is Loading -> {
+                    binding.apply {
+                        activateToggleButton.isEnabled = false
+                        activateToggleButton.text = resources.getString(R.string.alarm_loading)
+                        activateToggleButton.setBackgroundResource(R.drawable.activate_button_background_sleeping)
+                    }
+
                     viewModel.showSnackBar("Loading", Snackbar.LENGTH_SHORT)
                 }
 
