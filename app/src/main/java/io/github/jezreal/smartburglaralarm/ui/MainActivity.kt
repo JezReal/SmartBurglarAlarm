@@ -95,8 +95,8 @@ class MainActivity : AppCompatActivity() {
             CHANNEL_ID
         )
             .setSmallIcon(R.drawable.ic_baseline_sensors_24)
-            .setContentTitle("Burglar detected")
-            .setContentText("eh eh eh eh")
+            .setContentTitle("Burglar alarm triggered")
+            .setContentText("Possible burglar detected")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
