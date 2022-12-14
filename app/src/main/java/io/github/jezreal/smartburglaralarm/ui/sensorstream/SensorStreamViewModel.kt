@@ -58,7 +58,7 @@ class SensorStreamViewModel @Inject constructor(
             _sensorStreamState.value = Loading
 
             try {
-                socketUri = URI("ws://192.168.1.18:8080/ws")
+                socketUri = URI("ws://192.168.4.1:8080/ws")
             } catch (e: URISyntaxException) {
                 viewModelScope.launch {
                     _sensorStreamEvent.emit(
