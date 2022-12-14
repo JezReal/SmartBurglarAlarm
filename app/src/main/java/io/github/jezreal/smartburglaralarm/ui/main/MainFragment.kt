@@ -82,8 +82,6 @@ class MainFragment : Fragment() {
                         activateToggleButton.text = resources.getString(R.string.alarm_loading)
                         activateToggleButton.setBackgroundResource(R.drawable.activate_button_background_sleeping)
                     }
-
-                    viewModel.showSnackBar("Loading", Snackbar.LENGTH_SHORT)
                 }
 
                 is Success -> {

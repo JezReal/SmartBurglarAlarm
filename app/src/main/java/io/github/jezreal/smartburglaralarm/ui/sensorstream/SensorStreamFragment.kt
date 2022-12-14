@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -13,6 +13,7 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import io.github.jezreal.smartburglaralarm.R
 import io.github.jezreal.smartburglaralarm.databinding.FragmentSensorStreamBinding
+import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamEvent.BurglarDetected
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamEvent.ShowSnackBar
 import io.github.jezreal.smartburglaralarm.ui.sensorstream.SensorStreamViewModel.SensorStreamState.*
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class SensorStreamFragment : Fragment() {
     private var _binding: FragmentSensorStreamBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SensorStreamViewModel by viewModels()
+    private val viewModel: SensorStreamViewModel by activityViewModels()
     private lateinit var adapter: SensorDataAdapter
 
     override fun onCreateView(
@@ -48,7 +49,6 @@ class SensorStreamFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.closeSocket()
         _binding = null
     }
 
@@ -64,6 +64,9 @@ class SensorStreamFragment : Fragment() {
                         when (event) {
                             is ShowSnackBar -> {
                                 Snackbar.make(binding.root, event.message, event.length).show()
+                            }
+                            is BurglarDetected -> {
+//                                do nothing. Let the activity listen for it
                             }
                         }
                     }
@@ -95,6 +98,7 @@ class SensorStreamFragment : Fragment() {
 
                 is Error -> {
                     viewModel.showSnackBar(state.message, Snackbar.LENGTH_SHORT)
+                    binding.recyclerView.visibility = View.GONE
                 }
 
                 is DeviceInactive -> {
@@ -116,6 +120,4 @@ class SensorStreamFragment : Fragment() {
         adapter = SensorDataAdapter()
         binding.recyclerView.adapter = adapter
     }
-
-
 }
